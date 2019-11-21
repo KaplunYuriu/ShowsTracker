@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ShowsTracker.API;
+using ShowsTracker.Models;
 
 namespace ShowsTracker.Controllers
 {
@@ -28,6 +29,18 @@ namespace ShowsTracker.Controllers
             var movie = await _omdbApi.GetById(id);
 
             return Ok(movie);
+        }
+
+        [HttpGet("{id}/seasons/{seasonNumber}")]
+        public async Task<IActionResult> GetSeason(string id, int seasonNumber)
+        {
+            var show = await _omdbApi.GetById(id);
+            if (show.Type != ShowType.Series || seasonNumber > show.TotalSeasons)
+                return BadRequest("The show is not a series or there is no such season");
+
+            var season = await _omdbApi.GetSeason(id, seasonNumber);
+
+            return Ok(season);
         }
     }
 }
