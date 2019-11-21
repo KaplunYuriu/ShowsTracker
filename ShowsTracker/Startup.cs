@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Refit;
+using ShowsTracker.API;
 using ShowsTracker.Infrastructure;
 using ShowsTracker.Repositories;
 using ShowsTracker.Services;
@@ -29,9 +31,13 @@ namespace ShowsTracker
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+            var appSettings = appSettingsSection.Get<AppSettings>();
+
             RegisterRepositories(services);
-            RegisterServices(services);
-            ConfigureAuthOptions(services);
+            RegisterServices(services, appSettings);
+            ConfigureAuthOptions(services, appSettings);
         
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -76,9 +82,19 @@ namespace ShowsTracker
             });
         }
 
-        private void RegisterServices(IServiceCollection services)
+        private void RegisterServices(IServiceCollection services, AppSettings appSettings)
         {
             services.AddScoped<IUserService, UserService>();
+           
+            services.AddScoped<IOmdbApi>(r =>
+            {
+                var service = RestService.For<IOmdbApi>(appSettings.OmdbApiUrl, new RefitSettings
+                {
+                    HttpMessageHandlerFactory = () => new ApiKeyHttpMessageHandler(appSettings.OmdbApiKey)
+                });
+
+                return service;
+            });
         }
 
         private void RegisterRepositories(IServiceCollection services)
@@ -89,12 +105,8 @@ namespace ShowsTracker
             services.AddSingleton<IUserRepository, UserRepository>();
         }
 
-        private void ConfigureAuthOptions(IServiceCollection services)
+        private void ConfigureAuthOptions(IServiceCollection services, AppSettings appSettings)
         {
-            var appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
-
-            var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(x =>
                 {
