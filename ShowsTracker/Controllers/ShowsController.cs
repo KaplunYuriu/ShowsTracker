@@ -16,11 +16,11 @@ namespace ShowsTracker.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> Search(string title, int? year)
+        public async Task<IActionResult> Search(string query, int page = 1)
         {
-            var movie = await _omdbApi.Search(title, year);
+            var searchResult = await _omdbApi.Search(query, page);
 
-            return Ok(movie);
+            return Ok(searchResult);
         }
 
         [HttpGet("{id}")]
