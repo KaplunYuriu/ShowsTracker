@@ -3,12 +3,12 @@ import { Route } from 'react-router';
 import Layout from './components/Layout';
 import Home from './components/Home';
 import Counter from './components/Counter';
-import FetchData from './components/FetchData';
+import SearchShows from './components/SearchShows';
 
 export default () => (
   <Layout>
     <Route exact path='/' component={Home} />
     <Route path='/counter' component={Counter} />
-    <Route path='/fetchdata/:startDateIndex?' component={FetchData} />
+    <Route path='/searchshows/:searchQuery?/:pageNumber?' component={SearchShows} />
   </Layout>
 );

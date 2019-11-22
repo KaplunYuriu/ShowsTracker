@@ -1,0 +1,12 @@
+.show-thumbnail {
+  height: 460px;
+}
+
+.show-thumbnail img {
+  height: 250px;
+}
+
+.show-thumbnail a[role="button"] {
+  bottom: 30px;
+  position: absolute;
+}
