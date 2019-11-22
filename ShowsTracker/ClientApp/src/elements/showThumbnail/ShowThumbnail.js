@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './ShowThumbnail.css';
 
 const ShowThumbnail = props => (
@@ -7,7 +8,9 @@ const ShowThumbnail = props => (
       <img src={props.show.poster} alt={props.show.title} />
       <div className="caption">
         <h3>{props.show.title}</h3>
-        <p><a href="#" className="btn btn-primary" role="button">Details</a></p>
+        <p>
+          <Link className='btn btn-primary' role='button' to={`/details/${props.show.imdbID}`}>Details</Link> 
+        </p>
       </div>
     </div>
   </div>

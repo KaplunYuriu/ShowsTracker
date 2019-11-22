@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { actionCreators } from '../store/SearchShows';
-import ShowThumbnail from '../elements/showThumbnail/ShowThumbnail';
+import ShowThumbnail from '../elements/ShowThumbnail/ShowThumbnail';
 import isNil from 'lodash-es/isNil';
 import './SearchShows.css';
 

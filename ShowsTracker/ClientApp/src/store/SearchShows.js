@@ -2,7 +2,7 @@
 import isNil from 'lodash-es/isNil';
 
 const requestShowsData = 'REQUEST_SHOWS_DATA';
-const receiveWeatherForecastsType = 'RECEIVE_SHOWS_DATA';
+const receiveShowsData = 'RECEIVE_SHOWS_DATA';
 const initialState = {
   shows: [],
   totalResults: 0,
@@ -31,7 +31,7 @@ export const actionCreators = {
     } = searchResult;
 
     dispatch({
-      type: receiveWeatherForecastsType,
+      type: receiveShowsData,
       pageNumber,
       shows: search,
       totalResults,
@@ -52,7 +52,7 @@ export const reducer = (state, action) => {
     };
   }
 
-  if (action.type === receiveWeatherForecastsType) {
+  if (action.type === receiveShowsData) {
     return {
       ...state,
       pageNumber: action.pageNumber,
