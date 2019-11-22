@@ -85,8 +85,9 @@ namespace ShowsTracker
         private void RegisterServices(IServiceCollection services, AppSettings appSettings)
         {
             services.AddScoped<IUserService, UserService>();
-           
-            services.AddScoped<IOmdbApi>(r =>
+            services.AddScoped<IWatchlistService, WatchlistService>();
+
+            services.AddSingleton<IOmdbApi>(r =>
             {
                 var service = RestService.For<IOmdbApi>(appSettings.OmdbApiUrl, new RefitSettings
                 {
@@ -103,6 +104,7 @@ namespace ShowsTracker
                 new DataAccess(Configuration.GetConnectionString("ShowsTrackerDatabase")));
 
             services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IWatchlistRepository, WatchlistRepository>();
         }
 
         private void ConfigureAuthOptions(IServiceCollection services, AppSettings appSettings)

@@ -8,7 +8,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ShowsTracker.Infrastructure;
 using ShowsTracker.Models;
-using ShowsTracker.Repositories;
 using ShowsTracker.Services;
 
 namespace ShowsTracker.Controllers
