@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ShowsTracker.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class SampleDataController : Controller
     {
         private static string[] Summaries = new[]

@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
 using ShowsTracker.API;
+using ShowsTracker.Infrastructure;
 using ShowsTracker.Models;
 
 namespace ShowsTracker.Controllers
@@ -19,6 +22,7 @@ namespace ShowsTracker.Controllers
         public async Task<IActionResult> Search(string query, int page = 1)
         {
             var searchResult = await _omdbApi.Search(query, page);
+            searchResult.Search = searchResult.Search.Where(x => x != null).DistinctBy(x => x.ImdbID).ToList();
 
             return Ok(searchResult);
         }

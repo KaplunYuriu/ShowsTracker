@@ -11,7 +11,7 @@ namespace ShowsTracker.API
         Task<ShowSearchResult> Search([AliasAs("s")] string query, int page);
 
         [Get("/")]
-        Task<Show> GetByName([AliasAs("t")]string title, [AliasAs("y")]int? year);
+        Task<Show> GetByName([AliasAs("t")]string title, [AliasAs("y")]int? year, string plot = "full");
 
         [Get("/")]
         Task<Show> GetById([AliasAs("i")]string imdbId);

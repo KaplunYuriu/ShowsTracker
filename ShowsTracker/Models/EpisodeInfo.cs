@@ -7,6 +7,6 @@ namespace ShowsTracker.Models
         public string Title { get; set; }
         public int Episode { get; set; }
         public string ImdbID { get; set; }
-        public DateTime Release { get; set; }
+        public DateTime Released { get; set; }
     }
 }
