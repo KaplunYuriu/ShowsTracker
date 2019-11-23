@@ -2,6 +2,8 @@ import ShowsService from '../services/ShowsService';
 import clone from 'lodash-es/clone';
 import isNil from 'lodash-es/isNil';
 import findIndex from 'lodash-es/findIndex';
+import find from 'lodash-es/find';
+import { actions as watchlistActions, WatchStatus } from './Watchlist';
 
 const actions = {
   REQUEST_SHOW_DATA: 'REQUEST_SHOW_DATA',
@@ -39,6 +41,13 @@ export const actionCreators = {
     dispatch({ type: actions.REQUEST_SHOW_DATA });
 
     var show = await showsService.getShow(id);
+
+    var history = find(getState().watchlist.shows, (s) => s.showId === show.imdbID);
+    if (!isNil(history)) {
+      show.watchStatus = history.status;
+    } else {
+      show.watchStatus = WatchStatus.NotStarted;
+    }
 
     let showSeasons = [];
     if (show.type === ShowType.Series) {
@@ -113,6 +122,27 @@ export const reducer = (state, action) => {
         isLoading: false,
         seasons: [ ...state.seasons.filter(s => s.season !== seasonNumber), season ].sort((a, b) => a.season - b.season)
       };
+    }
+
+    case watchlistActions.DELETE_SHOW: {
+      return {
+        ...state,
+        show: { ...state.show, watchStatus: WatchStatus.NotStarted }
+      }
+    }
+
+    case watchlistActions.START_WATCHING_SHOW: {
+      return {
+        ...state,
+        show: { ...state.show, watchStatus: WatchStatus.InProgress }
+      }
+    }
+
+    case watchlistActions.COMPLETE_SHOW: {
+      return {
+        ...state, 
+        show: { ...state.show, watchStatus: WatchStatus.Completed }
+      }
     }
 
     default: return state;

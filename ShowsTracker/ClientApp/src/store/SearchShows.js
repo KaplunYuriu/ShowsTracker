@@ -103,6 +103,9 @@ export const reducer = (state, action) => {
 };
 
 const updateShowStatus = (id, status, shows) => {
+  if (shows.length === 0)
+    return shows;
+    
   const show = find(shows, (s) => s.imdbID === id);
   show.watchStatus = status;
 

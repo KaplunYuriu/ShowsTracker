@@ -23,6 +23,14 @@ class Login extends Component {
     this.tryRegister = this.tryRegister.bind(this);
   }
 
+  componentWillMount() {
+    const { isLoggedIn } = this.props;
+    
+    if (isLoggedIn) {
+      this.props.history.push('/searchshows');
+    }
+  }
+
   getEmailValidation() {
     const { emailAddress } = this.state;
 

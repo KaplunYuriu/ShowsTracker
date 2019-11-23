@@ -37,7 +37,6 @@ class SearchShows extends Component {
 
   render() {
     const { query } = this.state;
-
     return (
       <div>
         <div className="row">
@@ -87,7 +86,7 @@ const mapDispatchToProps = dispatch => ({
   deleteShow: (id, type) => dispatch(watchlistActionCreators.deleteShow(id, type)),
   startWatching: (id, type) => dispatch(watchlistActionCreators.startWatchingShow(id, type)),
   completeShow: (id, type) => dispatch(watchlistActionCreators.completeShow(id, type))
-})
+});
 
 export default connect(
   state => state.shows,

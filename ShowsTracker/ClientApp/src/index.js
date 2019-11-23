@@ -25,16 +25,22 @@ const rootElement = document.getElementById('root');
 store.dispatch(loginActions.check()).then(() => {
   var state = store.getState().user;
 
-  if (state.isLoggedIn)
-    store.dispatch(watchlistActions.loadHistory());
+  if (state.isLoggedIn) {
+    store.dispatch(watchlistActions.loadHistory()).then(() => render());
+  }
+  else {
+    render();
+  }
 });
 
-ReactDOM.render(
-  <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <App />
-    </ConnectedRouter>
-  </Provider>,
-  rootElement);
+function render() { 
+  ReactDOM.render(
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <App />
+      </ConnectedRouter>
+    </Provider>,
+    rootElement);
+}
 
 registerServiceWorker();

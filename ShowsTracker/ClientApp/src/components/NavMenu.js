@@ -21,11 +21,7 @@ const NavMenu = props => {
       </Navbar.Header>
       <Navbar.Collapse>
         <Nav>
-          <LinkContainer to={'/searchshows'}>
-            <NavItem>
-              <Glyphicon glyph='film' /> Search shows
-            </NavItem>
-          </LinkContainer>
+         
           {!isLoggedIn && 
             <LinkContainer to={'/login'}>
               <NavItem>
@@ -33,11 +29,19 @@ const NavMenu = props => {
               </NavItem>
             </LinkContainer>
           }
+          {isLoggedIn && 
+             <LinkContainer to={'/searchshows'}>
+                <NavItem>
+                  <Glyphicon glyph='film' /> Search shows
+                </NavItem>
+              </LinkContainer>
+          }
           {isLoggedIn &&
             <NavItem onClick={logout} > 
               <Glyphicon glyph='user' /> Logout
             </NavItem>
           }
+
         </Nav>
       </Navbar.Collapse>
     </Navbar>    

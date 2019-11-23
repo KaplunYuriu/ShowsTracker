@@ -7,7 +7,7 @@ import Details from './components/Details';
 
 export default () => (
   <Layout>
-    <Route exact path='/' component={SearchShows} />
+    <Route exact path='/' component={Login} />
     <Route path='/searchshows/:searchQuery?/:pageNumber?' component={SearchShows} />
     <Route path='/details/:id' component={Details} />
     <Route path='/login' component={Login} />
