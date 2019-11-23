@@ -77,6 +77,13 @@ export const actionCreators = {
 
     var episode = await showsService.getShow(imdbID);
 
+    var history = find(getState().watchlist.episodes, (s) => s.episodeId === imdbID);
+    if (!isNil(history)) {
+      episode.watchStatus = history.status;
+    } else {
+      episode.watchStatus = WatchStatus.NotStarted;
+    }
+
     dispatch({ type: actions.RECEIVE_EPISODE_DATA, episode, seasonNumber });
   }
 };
@@ -125,26 +132,40 @@ export const reducer = (state, action) => {
     }
 
     case watchlistActions.DELETE_SHOW: {
-      return {
-        ...state,
-        show: { ...state.show, watchStatus: WatchStatus.NotStarted }
-      }
+      return getNewStateForEpisodeOrShow(action.id, WatchStatus.NotStarted, state);
     }
 
     case watchlistActions.START_WATCHING_SHOW: {
-      return {
-        ...state,
-        show: { ...state.show, watchStatus: WatchStatus.InProgress }
-      }
+      return getNewStateForEpisodeOrShow(action.id, WatchStatus.InProgress, state);
     }
 
     case watchlistActions.COMPLETE_SHOW: {
-      return {
-        ...state, 
-        show: { ...state.show, watchStatus: WatchStatus.Completed }
-      }
+      return getNewStateForEpisodeOrShow(action.id, WatchStatus.Completed, state);
     }
 
     default: return state;
   }
+}
+
+function getNewStateForEpisodeOrShow(id, status, state) {
+  var season = getUpdatedSeason(id, status, state.seasons);
+  var show = id === state.show.imdbID ?  { ...state.show, watchStatus: WatchStatus.NotStarted } : state.show;
+
+  return {
+    ...state,
+    seasons: [ ...state.seasons.filter(s => s.season !== season.season), season ].sort((a, b) => a.season - b.season),
+    show: show
+  }
+}
+
+function getUpdatedSeason(id, status, seasons) {
+    var season = find(seasons, (s) => find(s.episodes, (e) => e.imdbID === id) !== undefined);
+
+    var episode = find(season.episodes, (e) => e.imdbID === id);
+
+    episode.watchStatus = status;
+
+    season.episodes = [ ...season.episodes.filter(e => e.imdbID !== episode.imdbID), episode].sort((a, b) => a.episode - b.episode);
+    
+    return season;
 }

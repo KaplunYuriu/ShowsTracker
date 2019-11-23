@@ -33,11 +33,12 @@ class Details extends Component {
           </Col>
           <Col md={3}>
             <DetailsPanel show={show} />
-            <ShowWatchStatus watchStatus={show.watchStatus} showId={show.imdbID} showType={show.type} deleteShow={deleteShow} startWatching={startWatching} completeShow={completeShow} />
+            <ShowWatchStatus watchStatus={show.watchStatus} showId={show.imdbID} showType={show.type} deleteShow={deleteShow} startWatching={startWatching} completeShow={completeShow}/>
           </Col>
         </Row>
         {isLoading ? <span>Loading...</span> : []}
-        {isSeries && <SeasonsList id={show.imdbID} seasons={seasons} loadSeason={loadSeason} loadEpisode={loadEpisode} />}
+        {isSeries && <SeasonsList id={show.imdbID} seasons={seasons} loadSeason={loadSeason} loadEpisode={loadEpisode}
+                                  deleteShow={deleteShow} startWatching={startWatching} completeShow={completeShow} />}
       </div>
     </div>);
   }
@@ -46,7 +47,7 @@ class Details extends Component {
 const mapDispatchToProps = dispatch => ({
   loadDetails: (id) => dispatch(actionCreators.loadDetails(id)),
   loadSeason: (seasonNumber) => dispatch(actionCreators.loadSeason(seasonNumber)),
-  loadEpisode: (imdbID, seasonNumber) => dispatch(watchlistActionCreators.loadEpisode(imdbID, seasonNumber)),
+  loadEpisode: (imdbID, seasonNumber) => dispatch(actionCreators.loadEpisode(imdbID, seasonNumber)),
   deleteShow: (id, type) => dispatch(watchlistActionCreators.deleteShow(id, type)),
   startWatching: (id, type) => dispatch(watchlistActionCreators.startWatchingShow(id, type)),
   completeShow: (id, type) => dispatch(watchlistActionCreators.completeShow(id, type))

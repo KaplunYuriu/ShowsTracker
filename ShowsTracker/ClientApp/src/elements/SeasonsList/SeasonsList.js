@@ -5,11 +5,12 @@ import './SeasonsList.css';
 
 const SeasonsList = props => {
   const { seasons } = props;
-  const { loadSeason, loadEpisode } = props;
+  const { loadSeason, loadEpisode, deleteShow, startWatching, completeShow } = props;
 
   let seasonPanels = [];
   seasons.forEach(season => {
-    seasonPanels.push(<SeasonPanel season={season} loadSeason={loadSeason} loadEpisode={loadEpisode} key={`season${season.season}`} />);
+    seasonPanels.push(<SeasonPanel season={season} loadSeason={loadSeason} loadEpisode={loadEpisode} key={`season${season.season}`} 
+                                    deleteShow={deleteShow} startWatching={startWatching} completeShow={completeShow} />);
   });
 
   return (

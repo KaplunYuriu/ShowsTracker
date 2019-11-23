@@ -1,14 +1,16 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
-import Panel from 'react-bootstrap/lib/Panel'
+import Panel from 'react-bootstrap/lib/Panel';
+import ShowWatchStatus from '../ShowWatchStatus/ShowWatchStatus';
 
 const SeasonPanel = props => {
   const { season } = props;
-  const { loadSeason, loadEpisode } = props;
+  const { loadSeason, loadEpisode, deleteShow, startWatching, completeShow } = props;
 
   const episodesPanels = [];
   season.episodes.forEach(episode => {
-    episodesPanels.push(<EpisodePanel episode={episode} key={episode.imdbID} seasonNumber={season.season} loadEpisode={loadEpisode} />);
+    episodesPanels.push(<EpisodePanel episode={episode} key={episode.imdbID} seasonNumber={season.season} loadEpisode={loadEpisode} 
+                          deleteShow={deleteShow} startWatching={startWatching} completeShow={completeShow}/>);
   });
 
   return (
@@ -30,7 +32,7 @@ const SeasonPanel = props => {
 
 const EpisodePanel = props => {
   const { episode, seasonNumber } = props;
-  const { loadEpisode } = props;
+  const { loadEpisode, deleteShow, startWatching, completeShow } = props;
 
   return (
     <Panel>
@@ -49,6 +51,8 @@ const EpisodePanel = props => {
                 <li><strong>Released: </strong> {episode.released}</li>
                 <li><strong>Runtime: </strong> {episode.runtime}</li>
                 <li><strong>Year: </strong> {episode.year}</li>
+
+                <ShowWatchStatus watchStatus={episode.watchStatus} showId={episode.imdbID} showType={episode.type} deleteShow={deleteShow} startWatching={startWatching} completeShow={completeShow}/>
               </Col>
             </Row>
           </Panel.Body>
