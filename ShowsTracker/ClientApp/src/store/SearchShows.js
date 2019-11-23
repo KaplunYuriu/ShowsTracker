@@ -107,6 +107,9 @@ const updateShowStatus = (id, status, shows) => {
     return shows;
     
   const show = find(shows, (s) => s.imdbID === id);
+  if (show === undefined)
+    return shows;
+    
   show.watchStatus = status;
 
   return [ ...shows.filter(s => s.imdbID !== id), show ].sort((a, b) => a.title.localeCompare(b.title))

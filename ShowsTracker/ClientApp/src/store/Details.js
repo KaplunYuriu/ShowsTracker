@@ -3,6 +3,7 @@ import clone from 'lodash-es/clone';
 import isNil from 'lodash-es/isNil';
 import findIndex from 'lodash-es/findIndex';
 import find from 'lodash-es/find';
+import filter from 'lodash-es/filter';
 import { actions as watchlistActions, WatchStatus } from './Watchlist';
 
 const actions = {
@@ -161,6 +162,11 @@ function getNewStateForEpisodeOrShow(id, status, state) {
     };
 
   var season = getUpdatedSeason(id, status, state.seasons);
+  if (season === undefined)
+    return {
+      ...state
+    }
+
   return {
     ...state,
     seasons: [ ...state.seasons.filter(s => s.season !== season.season), season ].sort((a, b) => a.season - b.season)
@@ -168,7 +174,11 @@ function getNewStateForEpisodeOrShow(id, status, state) {
 }
 
 function getUpdatedSeason(id, status, seasons) {
-    var season = find(seasons, (s) => find(s.episodes, (e) => e.imdbID === id) !== undefined);
+    var season = find(filter(seasons, (s) => s.episodes.length > 0), 
+                      (s) => find(s.episodes, (e) => e.imdbID === id) !== undefined);
+
+    if (season === undefined)
+      return undefined;
 
     var episode = find(season.episodes, (e) => e.imdbID === id);
 

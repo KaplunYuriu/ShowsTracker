@@ -16,10 +16,10 @@ const ShowThumbnail = props => {
         <div className="caption">
           <h3>{show.title}</h3>
           <Row>
-            <Col md={6}>
+            <Col md={5}>
               <ShowWatchStatus watchStatus={show.watchStatus} showId={show.imdbID} showType={show.type} deleteShow={deleteShow} startWatching={startWatching} completeShow={completeShow} />
             </Col>
-            <Col md={6}>
+            <Col md={5}>
               <Link className='btn btn-primary pull-right' role='button' to={`/details/${show.imdbID}`}>Details</Link> 
             </Col>
           </Row>
