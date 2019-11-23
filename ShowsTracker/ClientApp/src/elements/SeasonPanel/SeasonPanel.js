@@ -2,6 +2,7 @@ import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import Panel from 'react-bootstrap/lib/Panel';
 import ShowWatchStatus from '../ShowWatchStatus/ShowWatchStatus';
+import './SeasonPanel.css';
 
 const SeasonPanel = props => {
   const { season } = props;
@@ -44,7 +45,7 @@ const EpisodePanel = props => {
           <Panel.Body>
             <Row>
               <Col md={3}>
-                <img src={episode.poster} alt={episode.title} />
+                <img src={episode.poster} alt={episode.title} className="poster" />
               </Col>
               <Col md={6}>
                 <li><strong>Plot: </strong> {episode.plot}</li>

@@ -5,7 +5,7 @@
         public string ShowId { get; set; }
         public string SeriesId { get; set; }
         public string EpisodeId { get; set; }
-        public string EpisodeNumber { get; set; }
+        public int? EpisodeNumber { get; set; }
         public int? SeasonNumber { get; set; }
         public WatchStatus Status { get; set; }
     }

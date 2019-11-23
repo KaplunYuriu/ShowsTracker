@@ -148,13 +148,22 @@ export const reducer = (state, action) => {
 }
 
 function getNewStateForEpisodeOrShow(id, status, state) {
-  var season = getUpdatedSeason(id, status, state.seasons);
-  var show = id === state.show.imdbID ?  { ...state.show, watchStatus: WatchStatus.NotStarted } : state.show;
+  if (id === state.show.imdbID) {
+    return {
+      ...state,
+      show:  { ...state.show, watchStatus: status }
+    }
+  }
 
+  if (state.show.type !== ShowType.Series)
+    return {
+      ...state
+    };
+
+  var season = getUpdatedSeason(id, status, state.seasons);
   return {
     ...state,
-    seasons: [ ...state.seasons.filter(s => s.season !== season.season), season ].sort((a, b) => a.season - b.season),
-    show: show
+    seasons: [ ...state.seasons.filter(s => s.season !== season.season), season ].sort((a, b) => a.season - b.season)
   }
 }
 
@@ -166,6 +175,6 @@ function getUpdatedSeason(id, status, seasons) {
     episode.watchStatus = status;
 
     season.episodes = [ ...season.episodes.filter(e => e.imdbID !== episode.imdbID), episode].sort((a, b) => a.episode - b.episode);
-    
+
     return season;
 }
