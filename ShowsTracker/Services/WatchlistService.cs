@@ -8,6 +8,7 @@ namespace ShowsTracker.Services
 {
     public interface IWatchlistService
     {
+        List<WatchilstEntry> GetAllHistory(int userId);
         Show GetNextForSeries(int userid, string seriesId);
         WatchStatus GetStatusForShow(int userId, string showId);
         WatchStatus GetStatusForEpisode(int userId, string episodeId);
@@ -32,6 +33,11 @@ namespace ShowsTracker.Services
             _watchlistRepository = watchlistRepository;
         }
 
+
+        public List<WatchilstEntry> GetAllHistory(int userId)
+        {
+            return _watchlistRepository.GetAllHistory(userId);
+        }
 
         public Show GetNextForSeries(int userid, string seriesId)
         {

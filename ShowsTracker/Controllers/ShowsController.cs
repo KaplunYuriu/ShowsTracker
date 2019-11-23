@@ -22,6 +22,9 @@ namespace ShowsTracker.Controllers
         public async Task<IActionResult> Search(string query, int page = 1)
         {
             var searchResult = await _omdbApi.Search(query, page);
+            if (searchResult.Search == null)
+                return Ok(new EmptySearchResult());
+
             searchResult.Search = searchResult.Search.Where(x => x != null).DistinctBy(x => x.ImdbID).ToList();
 
             return Ok(searchResult);

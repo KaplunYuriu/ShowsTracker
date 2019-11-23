@@ -7,6 +7,7 @@ namespace ShowsTracker.Repositories
 {
     public interface IWatchlistRepository
     {
+        List<WatchilstEntry> GetAllHistory(int userId);
         WatchStatus GetStatusForShow(int userId, string showId);
         WatchStatus GetStatusForEpisode(int userId, string episodeId);
         List<WatchilstEntry> GetStatusForSeries(int userId, string seriesId);
@@ -26,6 +27,14 @@ namespace ShowsTracker.Repositories
         public WatchlistRepository(IDataAccess dataAccess)
         {
             _dataAccess = dataAccess;
+        }
+
+        public List<WatchilstEntry> GetAllHistory(int userId)
+        {
+            return _dataAccess
+                .Query<WatchilstEntry>(@"SELECT ShowId, SeriesId, EpisodeId, EpisodeNumber, SeasonNumber, Status 
+                                        FROM UserWatchlist 
+                                        WHERE User_FK = @userId", new { userId }).ToList();
         }
 
         public WatchStatus GetStatusForShow(int userId, string showId)

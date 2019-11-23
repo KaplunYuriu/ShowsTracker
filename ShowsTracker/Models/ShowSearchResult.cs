@@ -8,4 +8,10 @@ namespace ShowsTracker.Models
 
         public int TotalResults { get; set; }
     }
+
+    public class EmptySearchResult : ShowSearchResult
+    {
+        public new List<Show> Search = new List<Show>();
+        public new int TotalResults = 0;
+    }
 }

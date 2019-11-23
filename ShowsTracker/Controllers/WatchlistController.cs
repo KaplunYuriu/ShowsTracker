@@ -30,15 +30,21 @@ namespace ShowsTracker.Controllers
             _omdbApi = omdbApi;
         }
 
-        #region Shows
-
-        [HttpGet("show/{id}")]
-        public IActionResult GetStatusForShow(string id)
+        [HttpGet("all")]
+        public IActionResult All()
         {
-            return Ok(_watchlistService.GetStatusForShow(CurrentUserId, id).ToString());
+            return Ok(_watchlistService.GetAllHistory(CurrentUserId));
         }
 
-        [HttpPost("show/{id}")]
+        #region Shows
+
+        [HttpGet("shows/{id}")]
+        public IActionResult GetStatusForShow(string id)
+        {
+            return Ok(_watchlistService.GetStatusForShow(CurrentUserId, id));
+        }
+
+        [HttpPost("shows/{id}")]
         public IActionResult AddToWatching(string id, [FromBody]AddToHistory model)
         {
             var existingStatus = _watchlistService.GetStatusForShow(CurrentUserId, id);
@@ -47,23 +53,23 @@ namespace ShowsTracker.Controllers
 
             _watchlistService.AddToHistory(CurrentUserId, id, model.WatchStatus);
 
-            return Ok();
+            return Ok(_watchlistService.GetStatusForShow(CurrentUserId, id));
         }
 
-        [HttpPut("show/{id}")]
+        [HttpPut("shows/{id}")]
         public IActionResult UpdateShowStatus(string id, [FromBody] AddToHistory model)
         {
             _watchlistService.SetStatus(CurrentUserId, id, model.WatchStatus);
 
-            return Ok();
+            return Ok(_watchlistService.GetStatusForShow(CurrentUserId, id));
         }
 
-        [HttpDelete("show/{id}")]
+        [HttpDelete("shows/{id}")]
         public IActionResult DeleteShowFromHistory(string id)
         {
             _watchlistService.DeleteShow(CurrentUserId, id);
 
-            return Ok();
+            return Ok(_watchlistService.GetStatusForShow(CurrentUserId, id));
         }
 
         #endregion
@@ -90,7 +96,7 @@ namespace ShowsTracker.Controllers
 
         #region Episodes
 
-        [HttpPost("episode/{id}")]
+        [HttpPost("episodes/{id}")]
         public IActionResult AddEpisodeToWatching(string id, [FromBody]AddToHistory model)
         {
             if (!VerifyThatShowIsEpisode(id, out var episodeInfo, out var result))
@@ -105,7 +111,7 @@ namespace ShowsTracker.Controllers
             return Ok();
         }
 
-        [HttpPut("episode/{id}")]
+        [HttpPut("episodes/{id}")]
         public IActionResult UpdateEpisodeStatus(string id, [FromBody] AddToHistory model)
         {
             if (!VerifyThatShowIsEpisode(id, out var episodeInfo, out var result))
@@ -116,7 +122,7 @@ namespace ShowsTracker.Controllers
             return Ok();
         }
 
-        [HttpDelete("episode/{id}")]
+        [HttpDelete("episodes/{id}")]
         public IActionResult DeleteEpisode(string id)
         {
             if (VerifyThatShowIsEpisode(id, out _, out var result) == false)
