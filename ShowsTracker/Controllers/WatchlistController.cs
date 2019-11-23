@@ -39,14 +39,22 @@ namespace ShowsTracker.Controllers
         #region Shows
 
         [HttpGet("shows/{id}")]
-        public IActionResult GetStatusForShow(string id)
+        public async Task<IActionResult> GetStatusForShow(string id)
         {
+            var show = await _omdbApi.GetById(id);
+            if (show.Type == ShowType.Episode)
+                return Ok(_watchlistService.GetStatusForEpisode(CurrentUserId, id));
+
             return Ok(_watchlistService.GetStatusForShow(CurrentUserId, id));
         }
 
         [HttpPost("shows/{id}")]
-        public IActionResult AddToWatching(string id, [FromBody]AddToHistory model)
+        public async Task<IActionResult> AddToWatching(string id, [FromBody]AddToHistory model)
         {
+            var show = await _omdbApi.GetById(id);
+            if (show.Type == ShowType.Episode)
+                return AddEpisodeToWatching(id, model);
+
             var existingStatus = _watchlistService.GetStatusForShow(CurrentUserId, id);
             if (existingStatus == WatchStatus.InProgress || existingStatus == WatchStatus.Completed)
                 return BadRequest("The show is already in progress or completed.");
@@ -57,16 +65,24 @@ namespace ShowsTracker.Controllers
         }
 
         [HttpPut("shows/{id}")]
-        public IActionResult UpdateShowStatus(string id, [FromBody] AddToHistory model)
+        public async Task<IActionResult> UpdateShowStatus(string id, [FromBody] AddToHistory model)
         {
+            var show = await _omdbApi.GetById(id);
+            if (show.Type == ShowType.Episode)
+                return UpdateEpisodeStatus(id, model);
+
             _watchlistService.SetStatus(CurrentUserId, id, model.WatchStatus);
 
             return Ok(_watchlistService.GetStatusForShow(CurrentUserId, id));
         }
 
         [HttpDelete("shows/{id}")]
-        public IActionResult DeleteShowFromHistory(string id)
+        public async Task<IActionResult> DeleteShowFromHistory(string id)
         {
+            var show = await _omdbApi.GetById(id);
+            if (show.Type == ShowType.Episode)
+                return DeleteEpisode(id);
+
             _watchlistService.DeleteShow(CurrentUserId, id);
 
             return Ok(_watchlistService.GetStatusForShow(CurrentUserId, id));

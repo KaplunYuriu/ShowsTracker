@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Internal;
 using ShowsTracker.API;
 using ShowsTracker.Infrastructure;
 using ShowsTracker.Models;
