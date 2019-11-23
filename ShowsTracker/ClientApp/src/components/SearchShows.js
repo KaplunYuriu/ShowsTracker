@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { actionCreators } from '../store/SearchShows';
+import { actionCreators as watchlistActionCreators} from '../store/Watchlist';
+
 import ShowThumbnail from '../elements/ShowThumbnail/ShowThumbnail';
 import isNil from 'lodash-es/isNil';
 import './SearchShows.css';
@@ -10,7 +11,7 @@ import './SearchShows.css';
 class SearchShows extends Component {
   constructor(props) {
     super(props);
-
+    
     this.state = {
       query: ''
     };
@@ -50,7 +51,7 @@ class SearchShows extends Component {
           </div>
         </div>
         <div className="row">
-          {renderForecastsTable(this.props)}
+          {renderShowsTable(this.props)}
         </div>
         {renderPagination(this.props)}
       </div>
@@ -58,9 +59,9 @@ class SearchShows extends Component {
   }
 }
 
-const renderForecastsTable = props => (
+const renderShowsTable = props => (
     <div className="row">
-      {props.shows.map(show => <ShowThumbnail show={show} key={show.imdbID} />)}
+      {props.shows.map(show => <ShowThumbnail show={show} key={show.imdbID} deleteShow={props.deleteShow} startWatching={props.startWatching} completeShow={props.completeShow} />)}
     </div> 
 );
 
@@ -81,7 +82,14 @@ function renderPagination(props) {
   </p>;
 }
 
+const mapDispatchToProps = dispatch => ({
+  searchShows: (searchQuery, pageNumber) => dispatch(actionCreators.searchShows(searchQuery, pageNumber)),
+  deleteShow: (id, type) => dispatch(watchlistActionCreators.deleteShow(id, type)),
+  startWatching: (id, type) => dispatch(watchlistActionCreators.startWatchingShow(id, type)),
+  completeShow: (id, type) => dispatch(watchlistActionCreators.completeShow(id, type))
+})
+
 export default connect(
   state => state.shows,
-  dispatch => bindActionCreators(actionCreators, dispatch)
+  dispatch => mapDispatchToProps
 )(SearchShows);

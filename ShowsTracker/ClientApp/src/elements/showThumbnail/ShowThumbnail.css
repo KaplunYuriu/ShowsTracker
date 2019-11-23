@@ -1,12 +1,11 @@
 .show-thumbnail {
-  height: 460px;
+  height: 400px;
 }
 
 .show-thumbnail img {
   height: 250px;
 }
 
-.show-thumbnail a[role="button"] {
-  bottom: 30px;
-  position: absolute;
+.show-thumbnail h3 {
+  height: 55px;
 }

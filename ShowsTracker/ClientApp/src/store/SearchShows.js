@@ -1,8 +1,13 @@
 ﻿import ShowsService from './ShowsService';
 import isNil from 'lodash-es/isNil';
+import find from 'lodash-es/find';
+import { actions as watchlistActions, WatchStatus } from './Watchlist';
 
-const requestShowsData = 'REQUEST_SHOWS_DATA';
-const receiveShowsData = 'RECEIVE_SHOWS_DATA';
+const actions = {
+  REQUEST_SHOWS_DATA: 'REQUEST_SHOWS_DATA',
+  RECEIVE_SHOWS_DATA: 'RECEIVE_SHOWS_DATA'
+};
+
 const initialState = {
   shows: [],
   totalResults: 0,
@@ -15,12 +20,12 @@ export const actionCreators = {
   searchShows: (searchQuery, pageNumber) => async (dispatch, getState) => {
     const state = getState().shows;
     if ((pageNumber === state.pageNumber && state.searchQuery === searchQuery) || 
-        isNil(searchQuery)) {
+        isNil(searchQuery) || searchQuery.length < 3) {
       return;
     }
 
     dispatch({
-      type: requestShowsData,
+      type: actions.REQUEST_SHOWS_DATA,
       pageNumber
     });
 
@@ -30,8 +35,18 @@ export const actionCreators = {
       totalResults
     } = searchResult;
 
+    const { shows } = getState().watchlist;
+    search.forEach(element => {
+      var show = find(shows, (s) => s.showId === element.imdbID);
+      if (!isNil(show)) {
+        element.watchStatus = show.status;
+      } else {
+        element.watchStatus = WatchStatus.NotStarted;
+      }
+    });
+    
     dispatch({
-      type: receiveShowsData,
+      type: actions.RECEIVE_SHOWS_DATA,
       pageNumber,
       shows: search,
       totalResults,
@@ -43,25 +58,53 @@ export const actionCreators = {
 export const reducer = (state, action) => {
   state = state || initialState;
 
-  if (action.type === requestShowsData) {
-    return {
-      ...state,
-      pageNumber: action.pageNumber,
-      searchQuery: action.searchQuery,
-      isLoading: true
-    };
-  }
+  switch (action.type) {
+    case actions.REQUEST_SHOWS_DATA: 
+      return {
+        ...state,
+        pageNumber: action.pageNumber,
+        searchQuery: action.searchQuery,
+        isLoading: true
+      };
 
-  if (action.type === receiveShowsData) {
-    return {
-      ...state,
-      pageNumber: action.pageNumber,
-      totalResults: action.totalResults,
-      shows: action.shows,
-      searchQuery: action.searchQuery,
-      isLoading: false
-    };
-  }
+    case actions.RECEIVE_SHOWS_DATA:
+      return {
+        ...state,
+        pageNumber: action.pageNumber,
+        totalResults: action.totalResults,
+        shows: action.shows.sort((a, b) => a.title.localeCompare(b.title)),
+        searchQuery: action.searchQuery,
+        isLoading: false
+      };
+    
+    case watchlistActions.DELETE_SHOW: {
+      return {
+        ...state,
+        shows:  updateShowStatus(action.id, WatchStatus.NotStarted, state.shows)
+      }
+    }
 
-  return state;
+    case watchlistActions.START_WATCHING_SHOW: {
+      return {
+        ...state,
+        shows: updateShowStatus(action.id, WatchStatus.InProgress, state.shows)
+      }
+    }
+
+    case watchlistActions.COMPLETE_SHOW: {
+      return {
+        ...state, 
+        shows: updateShowStatus(action.id, WatchStatus.Completed, state.shows)
+      }
+    }
+
+    default: return state;
+  }
 };
+
+const updateShowStatus = (id, status, shows) => {
+  const show = find(shows, (s) => s.imdbID === id);
+  show.watchStatus = status;
+
+  return [ ...shows.filter(s => s.imdbID !== id), show ].sort((a, b) => a.title.localeCompare(b.title))
+}
