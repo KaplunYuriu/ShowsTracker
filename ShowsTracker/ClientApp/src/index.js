@@ -9,7 +9,8 @@ import { createBrowserHistory } from 'history';
 import configureStore from './store/configureStore';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import { actionCreators } from './store/Watchlist'
+import { actionCreators as watchlistActions  } from './store/Watchlist'
+import { actionCreators as loginActions } from './store/Login'
 
 // Create browser history to use in the Redux store
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
@@ -21,7 +22,12 @@ const store = configureStore(history, initialState);
 
 const rootElement = document.getElementById('root');
 
-store.dispatch(actionCreators.loadHistory());
+store.dispatch(loginActions.check()).then(() => {
+  var state = store.getState().user;
+
+  if (state.isLoggedIn)
+    store.dispatch(watchlistActions.loadHistory());
+});
 
 ReactDOM.render(
   <Provider store={store}>

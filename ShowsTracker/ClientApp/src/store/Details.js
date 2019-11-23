@@ -1,4 +1,4 @@
-import ShowsService from './ShowsService';
+import ShowsService from '../services/ShowsService';
 import clone from 'lodash-es/clone';
 import isNil from 'lodash-es/isNil';
 import findIndex from 'lodash-es/findIndex';

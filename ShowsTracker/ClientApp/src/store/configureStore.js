@@ -1,15 +1,15 @@
 ﻿import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
-import * as Counter from './Counter';
 import * as SearchShows from './SearchShows';
 import * as Details from './Details';
+import * as Login from './Login';
 import * as Watchlist from './Watchlist';
 
 export default function configureStore(history, initialState) {
   const reducers = {
-    counter: Counter.reducer,
     shows: SearchShows.reducer,
+    user: Login.reducer,
     details: Details.reducer,
     watchlist: Watchlist.reducer
   };

@@ -8,7 +8,7 @@ const SeasonsList = props => {
   const { loadSeason, loadEpisode } = props;
 
   let seasonPanels = [];
-  seasons.map(season => {
+  seasons.forEach(season => {
     seasonPanels.push(<SeasonPanel season={season} loadSeason={loadSeason} loadEpisode={loadEpisode} key={`season${season.season}`} />);
   });
 

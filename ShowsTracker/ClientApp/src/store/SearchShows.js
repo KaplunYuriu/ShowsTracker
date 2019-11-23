@@ -1,4 +1,4 @@
-﻿import ShowsService from './ShowsService';
+﻿import ShowsService from '../services/ShowsService';
 import isNil from 'lodash-es/isNil';
 import find from 'lodash-es/find';
 import { actions as watchlistActions, WatchStatus } from './Watchlist';

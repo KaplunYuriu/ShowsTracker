@@ -1,4 +1,4 @@
-import WatchlistService from './WatchlistService';
+import WatchlistService from '../services/WatchlistService';
 import filter from 'lodash-es/filter';
 import isNil from 'lodash-es/isNil';
 import find from 'lodash-es/find';
@@ -80,7 +80,7 @@ export const actionCreators = {
 }
 
 async function getShowStatus(id) {
-  return parseInt(await watchlistService.getStatus(id));
+  return parseInt((await watchlistService.getStatus(id)), 10);
 }
 
 export const reducer = (state, action) => {
