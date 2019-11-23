@@ -31,6 +31,8 @@ namespace ShowsTracker.Controllers
         public async Task<IActionResult> ById(string id)
         {
             var movie = await _omdbApi.GetById(id);
+            if (movie.Type == ShowType.Episode)
+                return Ok(await _omdbApi.GetEpisodeById(id));
 
             return Ok(movie);
         }

@@ -17,8 +17,6 @@
         public string ImdbID { get; set; }
         public ShowType Type { get; set; }
         public int? TotalSeasons { get; set; }
-
-        public int Episode { get; set; }
     }
 
     public enum ShowType

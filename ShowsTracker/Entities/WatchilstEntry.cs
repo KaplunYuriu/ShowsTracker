@@ -5,8 +5,9 @@
         public string ShowId { get; set; }
         public string SeriesId { get; set; }
         public string EpisodeId { get; set; }
+        public string EpisodeNumber { get; set; }
         public int? SeasonNumber { get; set; }
-        public WatchStatus WatchStatus { get; set; }
+        public WatchStatus Status { get; set; }
     }
 
     public enum WatchStatus

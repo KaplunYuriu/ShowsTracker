@@ -10,13 +10,15 @@ namespace ShowsTracker.Services
     {
         Show GetNextForSeries(int userid, string seriesId);
         WatchStatus GetStatusForShow(int userId, string showId);
-        List<WatchStatus> GetStatusForSeries(int userId, string seriesId);
+        WatchStatus GetStatusForEpisode(int userId, string episodeId);
+        List<WatchilstEntry> GetStatusForSeries(int userId, string seriesId);
         void AddToHistory(int userId, string showId, WatchStatus status);
-        void AddToHistory(int userId, string seriesId, string episodeId, int seasonNumber, WatchStatus status);
+        void AddToHistory(int userId, FullEpisodeInfo episode, WatchStatus status);
         void SetStatus(int userId, string showId, WatchStatus status);
-        void SetStatus(int userId, string seriesId, string episodeId, WatchStatus status);
+        void SetStatus(int userId, FullEpisodeInfo episode, WatchStatus status);
         void DeleteEpisode(int userId, string episodeId);
         void DeleteShow(int userId, string showId);
+        void DeleteSeries(int userId, string seriesId);
     }
 
     public class WatchlistService : IWatchlistService
@@ -41,7 +43,12 @@ namespace ShowsTracker.Services
             return _watchlistRepository.GetStatusForShow(userId, showId);
         }
 
-        public List<WatchStatus> GetStatusForSeries(int userId, string seriesId)
+        public WatchStatus GetStatusForEpisode(int userId, string episodeId)
+        {
+            return _watchlistRepository.GetStatusForEpisode(userId, episodeId);
+        }
+
+        public List<WatchilstEntry> GetStatusForSeries(int userId, string seriesId)
         {
             return _watchlistRepository.GetStatusForSeries(userId, seriesId);
         }
@@ -51,9 +58,9 @@ namespace ShowsTracker.Services
             _watchlistRepository.AddToHistory(userId, showId, status);
         }
 
-        public void AddToHistory(int userId, string seriesId, string episodeId, int seasonNumber, WatchStatus status)
+        public void AddToHistory(int userId, FullEpisodeInfo episode, WatchStatus status)
         {
-            _watchlistRepository.AddToHistory(userId, seriesId, episodeId, seasonNumber, status);
+            _watchlistRepository.AddToHistory(userId, episode.SeriesId, episode.ImdbID, episode.Season, episode.Episode, status);
         }
 
         public void SetStatus(int userId, string showId, WatchStatus status)
@@ -61,9 +68,9 @@ namespace ShowsTracker.Services
             _watchlistRepository.SetStatus(userId, showId, status);
         }
 
-        public void SetStatus(int userId, string seriesId, string episodeId, WatchStatus status)
+        public void SetStatus(int userId, FullEpisodeInfo episode, WatchStatus status)
         {
-            _watchlistRepository.SetStatus(userId, seriesId, episodeId, status);
+            _watchlistRepository.SetStatusForEpisode(userId, episode.ImdbID, status);
         }
 
         public void DeleteEpisode(int userId, string episodeId)
@@ -74,6 +81,11 @@ namespace ShowsTracker.Services
         public void DeleteShow(int userId, string showId)
         {
             _watchlistRepository.DeleteShow(userId, showId);
+        }
+
+        public void DeleteSeries(int userId, string seriesId)
+        {
+            _watchlistRepository.DeleteSeries(userId, seriesId);
         }
     }
 }

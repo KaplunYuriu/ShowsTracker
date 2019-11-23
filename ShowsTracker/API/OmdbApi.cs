@@ -17,6 +17,9 @@ namespace ShowsTracker.API
         Task<Show> GetById([AliasAs("i")]string imdbId);
 
         [Get("/")]
+        Task<FullEpisodeInfo> GetEpisodeById([AliasAs("i")]string imdbId);
+
+        [Get("/")]
         Task<SeasonInfo> GetSeason([AliasAs("i")] string imdbId, [AliasAs("season")]int seasonNumber);
     }
 }
