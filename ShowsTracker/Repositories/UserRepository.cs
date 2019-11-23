@@ -43,7 +43,7 @@ namespace ShowsTracker.Repositories
 
         public User FindByEmail(string emailAddress)
         {
-            return _dataAccess.Query<User>("SELECT User_PK as Id, EmailAddress, FullName, PasswordHash, PasswordSalt FROM [User] WHERE IsDeleted = 0")
+            return _dataAccess.Query<User>("SELECT User_PK as Id, EmailAddress, FullName, PasswordHash, PasswordSalt FROM [User] WHERE IsDeleted = 0 AND EmailAddress = @emailAddress", new { emailAddress })
                 .FirstOrDefault();
         }
 

@@ -33,7 +33,9 @@ namespace ShowsTracker.Controllers
 
             var user = _userService.Authenticate(model.EmailAddress, model.Password);
             if (user == null)
-                return BadRequest("Username of password is incorrect");
+                return BadRequest("Username or password is incorrect.");
+
+            var expires = DateTime.UtcNow.AddDays(7);
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Value.Secret);
@@ -43,13 +45,13 @@ namespace ShowsTracker.Controllers
                 {
                     new Claim(ClaimTypes.Name, user.Id.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = expires,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok(new { token = tokenString });
+            return Ok(new { token = tokenString, expires });
         }
 
         [HttpPost("Register")]

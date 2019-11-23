@@ -10,7 +10,6 @@ namespace ShowsTracker.Models
         [DataType(DataType.EmailAddress)]
         public string EmailAddress { get; set; }
 
-        [Required]
         public string FullName { get; set; }
     }
 
